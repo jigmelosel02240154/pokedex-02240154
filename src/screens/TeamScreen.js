@@ -25,7 +25,7 @@ export default function TeamScreen({ navigation }) {
               label={STAT_LABELS[t.name]}
               value={t.value}
               max={team.length * 200}
-              color={THEME.primaryDark}
+              color={THEME.accent}
             />
           ))}
           <Text style={styles.total}>Total: {grandTotal}</Text>

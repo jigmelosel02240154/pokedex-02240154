@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { THEME } from '../config';
 
 // One horizontal bar: label | value | filled track
-export default function StatBar({ label, value, max = 200, color = THEME.primary }) {
+export default function StatBar({ label, value, max = 200, color = THEME.accent }) {
   const percent = Math.max(0, Math.min(100, (value / max) * 100));
   return (
     <View style={styles.row}>

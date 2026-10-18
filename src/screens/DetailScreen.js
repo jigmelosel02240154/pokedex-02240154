@@ -136,6 +136,6 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 16, fontWeight: '700', color: THEME.text, marginBottom: 6 },
   button: { alignSelf: 'stretch', backgroundColor: THEME.primary, padding: 16, borderRadius: 28, alignItems: 'center' },
   buttonRemove: { backgroundColor: THEME.danger },
-  buttonDisabled: { backgroundColor: '#B8B5C6' },
+  buttonDisabled: { backgroundColor: '#3A3756' },
   buttonText: { color: '#fff', fontSize: 17, fontWeight: '700' },
 });

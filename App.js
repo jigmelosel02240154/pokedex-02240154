@@ -1,7 +1,7 @@
-import React from 'react';
-import { Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -10,15 +10,29 @@ import PokedexScreen from './src/screens/PokedexScreen';
 import TeamScreen from './src/screens/TeamScreen';
 import GameScreen from './src/screens/GameScreen';
 import DetailScreen from './src/screens/DetailScreen';
+import SplashScreen from './src/components/SplashScreen';
 import { STUDENT_NAME, THEME } from './src/config';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const headerOptions = {
-  headerStyle: { backgroundColor: THEME.primary },
-  headerTintColor: '#fff',
+  headerStyle: { backgroundColor: THEME.card },
+  headerTintColor: THEME.text,
   headerTitleStyle: { fontWeight: '800' },
+};
+
+// Dark colours for the navigators (stops white flashes between screens)
+const navTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: THEME.accent,
+    background: THEME.background,
+    card: THEME.card,
+    text: THEME.text,
+    border: THEME.border,
+  },
 };
 
 const icon = (emoji) => ({ focused }) => (
@@ -32,7 +46,10 @@ function Tabs() {
     <Tab.Navigator
       screenOptions={{
         ...headerOptions,
-        tabBarActiveTintColor: THEME.primary,
+        tabBarStyle: { backgroundColor: THEME.card, borderTopColor: THEME.border },
+        tabBarActiveTintColor: THEME.accent,
+        tabBarInactiveTintColor: THEME.muted,
+        tabBarBadgeStyle: { backgroundColor: THEME.primary, color: '#fff' },
       }}
     >
       <Tab.Screen
@@ -68,16 +85,32 @@ function Tabs() {
 }
 
 // Stack on top of the tabs, so Detail opens over them
-export default function App() {
+function Root() {
+  const { loaded } = useTeam(); // true once the saved team has been read
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
-    <TeamProvider>
-      <NavigationContainer>
+    <View style={{ flex: 1 }}>
+      <NavigationContainer theme={navTheme}>
         <StatusBar style="light" />
         <Stack.Navigator screenOptions={headerOptions}>
           <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
           <Stack.Screen name="Detail" component={DetailScreen} options={{ title: 'Pokémon' }} />
         </Stack.Navigator>
       </NavigationContainer>
+
+      {/* Splash sits on top; the app loads underneath while it plays */}
+      {showSplash && (
+        <SplashScreen ready={loaded} onFinish={() => setShowSplash(false)} />
+      )}
+    </View>
+  );
+}
+
+export default function App() {
+  return (
+    <TeamProvider>
+      <Root />
     </TeamProvider>
   );
 }
